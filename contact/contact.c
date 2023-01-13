@@ -1,5 +1,6 @@
 #define  _CRT_SECURE_NO_WARNINGS 1
 //姓名、性别、年龄、电话、住址
+//contact.c
 #include"contact.h"
 
 //初始化
@@ -132,8 +133,6 @@ void modify_contact(Contact* pc)
 }
 
 //sort
-
-
 
 void sort_contact( Contact* pc)
 {

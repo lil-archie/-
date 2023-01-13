@@ -1,5 +1,5 @@
 #define  _CRT_SECURE_NO_WARNINGS 1
-
+//test.c
 #include"contact.h"
 //实现一个通讯录；
 //
@@ -35,6 +35,7 @@ void test()
 	init_contact(&con);
 	do
 	{
+		//打印菜单
 		print_menu();
 		scanf("%d", &input);
 		switch (input)
