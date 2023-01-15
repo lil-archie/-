@@ -2,21 +2,88 @@
 //姓名、性别、年龄、电话、住址
 //contact.c
 #include"contact.h"
+//静态版本
+////初始化
+//void init_contact(Contact* pc)
+//{
+//	assert(pc);
+//	pc->sz = 0;
+//	memset(pc->data, 0, sizeof(pc->data));
+//}
 
+//动态版本
 //初始化
+//void init_contact(Contact* pc)
+//{
+//	assert(pc);
+//	pc->sz = 0;
+//	
+//	Peoinfo* ptr = (Peoinfo*)calloc(  DEFAULT_NUM, sizeof(Peoinfo));
+//	if (ptr == NULL)
+//	{
+//		perror("calloc");
+//		return;
+//	}
+//	pc->data = ptr;
+//	pc->capicity = DEFAULT_NUM;
+//	/*load_contact(pc);*/
+//
+//}
+
 void init_contact(Contact* pc)
 {
 	assert(pc);
 	pc->sz = 0;
-	memset(pc->data, 0, sizeof(pc->data));
+
+	Peoinfo* ptr = (Peoinfo*)calloc(DEFAULT_NUM, sizeof(Peoinfo));
+	if (ptr == NULL)
+	{
+		perror("calloc");
+		return;
+	}
+	pc->data = ptr;
+	pc->capicity = DEFAULT_NUM;
+	load_contact(pc);
+
 }
 
 
 
-//add
+//释放
+void free_contact(Contact* pc)
+{
+	free(pc->data);
+	pc->data = NULL;
+	pc->capicity = 0;
+	pc->sz = 0;
+}
+//检查是否需要增容
+void check_capicity(Contact*pc)
+{
+	assert(pc);
+	if (pc->sz == pc->capicity)
+	{
+		Peoinfo* ptr = (Peoinfo*)realloc(pc->data, (pc->capicity + INCRE_NUM) * sizeof(Peoinfo));
+		if (ptr == NULL)
+		{
+			perror("realloc");
+			return;
+		}
+		else
+		{
+			pc->data = ptr;
+			pc->capicity += INCRE_NUM;
+			printf("增容成功\n");
+		}
+	}
+}
+
+//动态版本
+//增加联系人
 void  add_contact(Contact* pc)
 {
 	assert(pc);
+	check_capicity(pc);
 	if (pc->sz > MAX)
 		printf("通讯录已满，无法添加\n");
 	printf("请输入姓名:>\n");
@@ -32,6 +99,29 @@ void  add_contact(Contact* pc)
 	pc->sz++;
 
 }
+
+
+//静态版本
+////add
+//void  add_contact(Contact* pc)
+//{
+//	assert(pc);
+//	
+//	if (pc->sz > MAX)
+//		printf("通讯录已满，无法添加\n");
+//	printf("请输入姓名:>\n");
+//	scanf("%s", pc->data[pc->sz].name);
+//	printf("请输入性别;>\n");
+//	scanf("%s", pc->data[pc->sz].sex);
+//	printf("请输入年龄;>\n");
+//	scanf("%d", &(pc->data[pc->sz].age));
+//	printf("请输入电话:>\n");
+//	scanf("%s", pc->data[pc->sz].tele);
+//	printf("请输入住址:>\n");
+//	scanf("%s", pc->data[pc->sz].addr);
+//	pc->sz++;
+//
+//}
 
 
 
@@ -192,4 +282,55 @@ void sort_contact( Contact* pc)
 		}
 	}
 
+}
+
+//保存联系人
+void save_contact(Contact* pc)
+{
+	FILE *pf=fopen("contact.txt", "wb");
+	if (pf == NULL)
+	{
+		perror("save_contact");
+	}
+	//使用文件
+	else
+	{
+		int i = 0;
+		for (i = 0; i < pc->sz; i++)
+		{
+			fwrite(pc->data + i, sizeof(Peoinfo), 1, pf);
+		}
+		fclose(pf);
+		pf = NULL;
+		printf("保存成功\n");
+	}
+	
+}
+
+
+//加载联系人
+
+void load_contact(Contact* pc)
+{
+	//读数据
+	FILE* pf = fopen("contact.txt", "rb");
+	if (pf == NULL)
+	{
+		perror("load_contact");
+	}
+	//使用文件
+
+	Peoinfo tmp;
+	int i = 0;
+	while (fread(&tmp, sizeof(Peoinfo), 1, pf))
+	{
+		check_capicity(pc);
+		pc->data[i] = tmp;
+		i++;
+		pc->sz++;
+	}
+	//关闭文件
+	fclose(pf);
+	pf = NULL;
+	printf("加载成功\n");
 }

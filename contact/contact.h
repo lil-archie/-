@@ -5,12 +5,15 @@
 #include<string.h>
 #include<assert.h>
 #include<stdlib.h>
+#include<errno.h>
 //通讯录可以用来存储1000个人的信息，每个人的信息包括：姓名、性别、年龄、电话、住址
 #define NAME_MAX 20
 #define SEX_MAX 8
 #define TELE_MAX 15
 #define ADDR_MAX 20
 #define MAX 100
+#define DEFAULT_NUM 3
+#define INCRE_NUM 2
 
 
 
@@ -25,8 +28,9 @@ typedef struct Peoinfo
 
 typedef struct Contact
 {
-	Peoinfo data[MAX];
+	Peoinfo* data;
 	int sz;
+	int capicity;
 }Contact;
 
 
@@ -57,3 +61,13 @@ void modify_contact(Contact* pc);
 
 //排序
 void sort_contact(Contact* pc);
+
+//释放通讯录的堆区的内容
+void free_contact(Contact*pc);
+
+//保存联系人的内容到文件中
+void save_contact(Contact*pc);
+
+//加载联系人
+
+void load_contact(Contact* pc);

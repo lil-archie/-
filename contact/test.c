@@ -14,7 +14,17 @@
 //显示所有联系人信息
 //清空所有联系人
 //以名字排序所有联系人
-
+enum options
+{
+	EXIT,//0
+	ADD,//1
+	SEARCH,//2
+	DEL,//3
+	MODIFY,//4
+	SHOW,//5
+	EMPTY,//6
+	SORT //7
+};
 void print_menu()
 {
 	printf("*************************************************\n");
@@ -40,35 +50,37 @@ void test()
 		scanf("%d", &input);
 		switch (input)
 		{
-		    case 1:
+		    case ADD:
 				//增加函数
 				add_contact(&con);
 				break;
-			case 2:
+			case SEARCH:
 				//寻找
 				search_contact(&con);
 				break;
-			case 3:
+			case DEL:
 				//删除联系人
 				del_contact(&con);
 				break;
-			case 4:
+			case MODIFY:
 				//修改联系人
 				modify_contact(&con);
 				break;
-			case 5:
+			case SHOW:
 				//展示通讯录
 				show_contact(&con);
 			
 				break;
-			case 6:
+			case EMPTY:
 				init_contact(&con);
 				printf("清除成功\n");
 				break;
-			case 7:
+			case SORT:
 				sort_contact(&con);
 				break;
-			case 0:
+			case EXIT:
+				save_contact(&con);
+				free_contact(&con);
 				printf("退出成功\n");
 				break;
 			default :
